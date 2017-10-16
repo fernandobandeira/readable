@@ -1,31 +1,42 @@
 import React, { Component } from 'react';
 import { Menu } from 'semantic-ui-react'
-import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 class CategoryList extends Component {
   state = { activeItem: 'bio' }
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+  changeRoute = ({ active }, path = null) => {
+    if (!active) {
+      if (path !== null) {
+        return this.props.history.push(`/c/${path}`);
+      }
 
-  componentWillMount() {
-    axios.get('/categories')
-      .then((res) => {
-        console.log(res.data.categories);
-      });
+      return this.props.history.push('/');
+    }
   }
 
-  render() {
-    const { activeItem } = this.state
+  render() {    
+    const { categories, active } = this.props;    
 
     return (
       <Menu fluid vertical tabular>
-        <Menu.Item name='bio' active={activeItem === 'bio'} onClick={this.handleItemClick} />
-        <Menu.Item name='pics' active={activeItem === 'pics'} onClick={this.handleItemClick} />
-        <Menu.Item name='companies' active={activeItem === 'companies'} onClick={this.handleItemClick} />
-        <Menu.Item name='links' active={activeItem === 'links'} onClick={this.handleItemClick} />
+          <Menu.Item 
+            name='all' 
+            key='all'
+            active={active === undefined}
+            onClick={(e, item) => this.changeRoute(item)}
+          />
+        {categories.map(category => (
+          <Menu.Item 
+            name={category.name} 
+            key={category.path}
+            active={category.path === active}
+            onClick={(e, item) => this.changeRoute(item, category.path)}
+          />
+        ))}
       </Menu>
     );
   }
 }
 
-export default CategoryList;
+export default withRouter(CategoryList);
