@@ -3,7 +3,7 @@ import { Segment, Dimmer, Loader } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { fetchPosts } from '../actions';
 import BaseList from './../components/BaseList';
-import PostTable from './../components/PostTable';
+import PostList from './../components/PostList';
 
 class Category extends Component {
   componentWillMount() {        
@@ -18,8 +18,8 @@ class Category extends Component {
             <Loader></Loader>
           </Dimmer>
 
-          <PostTable posts={this.props.posts}>
-          </PostTable>
+          <PostList posts={this.props.posts}>
+          </PostList>
         </Segment>
       </BaseList>
     );
