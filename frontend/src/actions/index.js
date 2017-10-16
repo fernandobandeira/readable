@@ -25,7 +25,7 @@ export function fetchPosts(url = '/posts') {
 
       axios.get(url)
         .then(res => {
-          dispatch(postsFetched(res.data));
+          dispatch(postsFetched(res.data.filter((post) => !post.deleted)));
           dispatch(postsLoading(false));          
         });
   };

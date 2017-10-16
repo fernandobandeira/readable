@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import React, { Component } from 'react';
 import { Feed, Icon, Select } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 class PostList extends Component {
@@ -14,7 +15,7 @@ class PostList extends Component {
   componentWillReceiveProps({ posts }) {
     if (this.state.posts !== posts) {      
       const { column = 'voteScore' } = this.state;
-      const sortedPosts = _.sortBy(posts, [column]);
+      const sortedPosts = _.sortBy(posts, [column]).reverse();
 
       this.setState({
         column,
@@ -62,7 +63,7 @@ class PostList extends Component {
             <Feed.Event key={post.id}>            
               <Feed.Content>
                 <Feed.Summary>
-                  <a>{post.title}</a> posted by {post.author}
+                  <Link to={`/${post.category}/${post.id}`}>{post.title}</Link> posted by {post.author}
                   <Feed.Date>{moment(post.timestamp).fromNow()}</Feed.Date>
                 </Feed.Summary>
                 <Feed.Extra text>

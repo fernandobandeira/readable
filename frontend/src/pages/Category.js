@@ -6,8 +6,19 @@ import BaseList from './../components/BaseList';
 import PostList from './../components/PostList';
 
 class Category extends Component {
-  componentWillMount() {        
-    this.props.fetchPosts();
+  state = {
+    category: {},
+  }
+
+  componentWillReceiveProps(props) {
+    const categoryPath = props.match.params.category;
+
+    if (categoryPath !== this.state.category.path) {
+      this.props.fetchPosts(`/${categoryPath}/posts`);
+      this.setState({
+        category: props.categories.find((category) => category.path === categoryPath),
+      });
+    }
   }
 
   render() {
@@ -26,10 +37,11 @@ class Category extends Component {
   }
 }
 
-function mapStateToProps({ posts, postsLoading }, ownProps) {  
+function mapStateToProps({ posts, postsLoading, categories }, ownProps) {
   return {
     posts: posts.filter((post) => post.category === ownProps.match.params.category),
     postsLoading,
+    categories,
   };
 }
 

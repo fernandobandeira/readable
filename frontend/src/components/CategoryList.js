@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 class CategoryList extends Component {
   changeRoute = ({ active }, path = null) => {
     if (!active) {
-      this.props.history.push(path ? `/c/${path}` : '/');
+      this.props.history.push(path ? `/${path}` : '/');
     }
   }
 
