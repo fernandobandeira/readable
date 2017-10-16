@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container } from 'semantic-ui-react'
+import { Container } from 'semantic-ui-react';
 import { Route } from 'react-router-dom';
 import Root from './pages/Root';
 
