@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Menu } from 'semantic-ui-react'
+import { Menu } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 
 class CategoryList extends Component {
-  state = { activeItem: 'bio' }
-
   changeRoute = ({ active }, path = null) => {
     if (!active) {
       this.props.history.push(path ? `/c/${path}` : '/');

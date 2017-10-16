@@ -2,13 +2,19 @@ import React, { Component } from 'react';
 import { Grid, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { initCategories } from '../actions';
+import { initCategories, initPosts } from '../actions';
 import CategoryList from './../components/CategoryList';
+import PostTable from './../components/PostTable';
 
-class Root extends Component {  
+class Root extends Component {
   componentWillMount() {
-    axios.get('/categories')
-      .then(res => this.props.dispatch(initCategories(res.data.categories)));
+    if (this.props.categories.length === 0) {      
+      axios.get('/categories')
+        .then(res => this.props.dispatch(initCategories(res.data.categories)));
+    }    
+
+    axios.get('/posts')
+      .then(res => this.props.dispatch(initPosts(res.data)));
   }
 
   render() {    
@@ -21,17 +27,19 @@ class Root extends Component {
 
         <Grid.Column stretched width={12}>
           <Segment>
-            This is an stretched grid column. This segment will always match the tab height
+            <PostTable posts={this.props.posts}>
+            </PostTable>
           </Segment>
         </Grid.Column>
-      </Grid>      
+      </Grid>
     );
   }
 }
 
-function mapStateToProps({ categories }) {  
+function mapStateToProps({ categories, posts }) {
   return {
     categories,
+    posts,
   };
 }
 
