@@ -7,16 +7,12 @@ class CategoryList extends Component {
 
   changeRoute = ({ active }, path = null) => {
     if (!active) {
-      if (path !== null) {
-        return this.props.history.push(`/c/${path}`);
-      }
-
-      return this.props.history.push('/');
+      this.props.history.push(path ? `/c/${path}` : '/');
     }
   }
 
   render() {    
-    const { categories, active } = this.props;    
+    const { categories, active } = this.props;
 
     return (
       <Menu fluid vertical tabular>
@@ -26,12 +22,12 @@ class CategoryList extends Component {
             active={active === undefined}
             onClick={(e, item) => this.changeRoute(item)}
           />
-        {categories.map(category => (
+        {categories.map(({name, path}) => (
           <Menu.Item 
-            name={category.name} 
-            key={category.path}
-            active={category.path === active}
-            onClick={(e, item) => this.changeRoute(item, category.path)}
+            name={name}
+            key={path}
+            active={path === active}
+            onClick={(e, item) => this.changeRoute(item, path)}
           />
         ))}
       </Menu>
