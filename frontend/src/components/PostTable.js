@@ -18,7 +18,7 @@ class PostTable extends Component {
 
         <Table.Body>
           {posts.map((post) => (
-            <Table.Row>
+            <Table.Row key={post.id}>
               <Table.Cell>{post.title}</Table.Cell>
               <Table.Cell>{post.author}</Table.Cell>
               <Table.Cell>{post.category}</Table.Cell>

@@ -1,32 +1,34 @@
 import React, { Component } from 'react';
-import { Grid, Segment } from 'semantic-ui-react';
+import { Grid, Segment, Dimmer, Loader } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import { initCategories, initPosts } from '../actions';
+import { fetchPosts, fetchCategories } from '../actions';
 import CategoryList from './../components/CategoryList';
 import PostTable from './../components/PostTable';
 
 class Root extends Component {
   componentWillMount() {
-    if (this.props.categories.length === 0) {      
-      axios.get('/categories')
-        .then(res => this.props.dispatch(initCategories(res.data.categories)));
-    }    
-
-    axios.get('/posts')
-      .then(res => this.props.dispatch(initPosts(res.data)));
+    this.props.fetchPosts();
+    this.props.fetchCategories();
   }
 
-  render() {    
+  render() {
     return (
       <Grid>
         <Grid.Column width={4}>
+          <Dimmer active={this.props.categoriesLoading} inverted>
+            <Loader></Loader>
+          </Dimmer>
+
           <CategoryList categories={this.props.categories} active={this.props.match.params.category}>
           </CategoryList>
         </Grid.Column>
 
         <Grid.Column stretched width={12}>
           <Segment>
+            <Dimmer active={this.props.postsLoading} inverted>
+              <Loader></Loader>
+            </Dimmer>
+
             <PostTable posts={this.props.posts}>
             </PostTable>
           </Segment>
@@ -36,11 +38,20 @@ class Root extends Component {
   }
 }
 
-function mapStateToProps({ categories, posts }) {
+function mapStateToProps({ posts, postsLoading, categories, categoriesLoading }) {
   return {
-    categories,
     posts,
+    postsLoading,
+    categories,
+    categoriesLoading,
   };
 }
 
-export default connect(mapStateToProps)(Root);
+function mapDispatchToProps(dispatch) {
+  return {
+      fetchPosts: (url) => dispatch(fetchPosts(url)),
+      fetchCategories: (url) => dispatch(fetchCategories(url)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Root);
