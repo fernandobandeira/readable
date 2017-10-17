@@ -3,6 +3,7 @@ import {
   FETCH_POSTS,
   FETCH_CATEGORY_POSTS,
   FETCH_POST,
+  SEND_VOTE,
   CHANGE_SORTING,
 } from '../actions/posts';
 
@@ -32,6 +33,7 @@ export default function(state = INITIAL_STATE, action) {
       };
     case FETCH_CATEGORY_POSTS:
     case FETCH_POST:
+    case SEND_VOTE:
       const byId = {
         ...state.byId,
         ...action.payload,
