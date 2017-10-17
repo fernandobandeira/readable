@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Segment, Dimmer, Loader } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { fetchPosts } from '../actions/posts';
 import BaseList from './../components/BaseList';
 import PostList from './../components/PostList';
@@ -51,4 +50,4 @@ function mapDispatchToProps(dispatch) {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Category));
+export default connect(mapStateToProps, mapDispatchToProps)(Category);

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Feed, Icon, Select } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import PostToolbar from './PostToolbar';
 
 class PostList extends Component {
   state = {
@@ -63,17 +64,16 @@ class PostList extends Component {
             <Feed.Event key={post.id}>            
               <Feed.Content>
                 <Feed.Summary>
-                  <Link to={`/${post.category}/${post.id}`}>{post.title}</Link> posted by {post.author}
-                  <Feed.Date>{moment(post.timestamp).fromNow()}</Feed.Date>
+                  <Link to={`/${post.category}/${post.id}`}>{post.title}</Link> by {post.author}
+                  <Feed.Date>
+                    {moment(post.timestamp).fromNow()}
+                  </Feed.Date>
                 </Feed.Summary>
                 <Feed.Extra text>
                   {post.body}
                 </Feed.Extra>
                 <Feed.Meta>
-                  <Feed.Like>
-                    <Icon name='like' />
-                    {post.voteScore} Likes
-                  </Feed.Like>
+                  <PostToolbar post={post}></PostToolbar>
                 </Feed.Meta>
               </Feed.Content>
             </Feed.Event>

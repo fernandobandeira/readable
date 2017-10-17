@@ -1,34 +1,45 @@
 import React, { Component } from 'react';
-import { Segment, Dimmer, Loader } from 'semantic-ui-react';
+import { Segment, Dimmer, Loader, Item, Icon } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { fetchPosts } from '../actions/posts';
-import BaseList from './../components/BaseList';
-import PostList from './../components/PostList';
+import moment from 'moment';
+import { fetchPost } from '../actions/posts';
 
 class Post extends Component {
   componentWillMount() {        
-    this.props.fetchPosts();
+    this.props.fetchPost(this.props.match.params.post);
   }
 
   render() {
     return (
       <Segment>
-        Test
+        <Dimmer active={this.props.loading} inverted>
+          <Loader></Loader>
+        </Dimmer>
+
+        <Item.Group>
+          <Item>
+            <Item.Content>
+              <Item.Header>{this.props.post.title}</Item.Header>
+              <Item.Meta>Posted by {this.props.post.author} {moment(this.props.post.timestamp).fromNow()}</Item.Meta>
+              <Item.Description>{this.props.post.body}</Item.Description>
+              <Item.Extra>
+                <Icon color='green' name='check' /> 121 Votes
+              </Item.Extra>
+            </Item.Content>
+          </Item>
+        </Item.Group>
       </Segment>
     );
   }
 }
 
 function mapStateToProps({ posts, postsLoading }, ownProps) {  
-  return {
-    posts: posts.filter((post) => post.category === ownProps.match.params.category),
-    postsLoading,
-  };
+  return posts.activePost;
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-      fetchPosts: (url) => dispatch(fetchPosts(url)),
+    fetchPost: (id) => dispatch(fetchPost(id)),
   };
 };
 
