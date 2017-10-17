@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Segment, Dimmer, Loader } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { fetchPosts } from '../actions';
+import { fetchPosts } from '../actions/posts';
 import BaseList from './../components/BaseList';
 import PostList from './../components/PostList';
 
@@ -14,7 +14,7 @@ class Root extends Component {
     return (
       <BaseList>
         <Segment>
-          <Dimmer active={this.props.postsLoading} inverted>
+          <Dimmer active={this.props.loading} inverted>
             <Loader></Loader>
           </Dimmer>
 
@@ -26,11 +26,8 @@ class Root extends Component {
   }
 }
 
-function mapStateToProps({ posts, postsLoading }) {
-  return {
-    posts,
-    postsLoading,
-  };
+function mapStateToProps({ posts }) {
+  return posts.postsList;
 }
 
 function mapDispatchToProps(dispatch) {

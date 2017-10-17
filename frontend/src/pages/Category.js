@@ -1,31 +1,35 @@
 import React, { Component } from 'react';
 import { Segment, Dimmer, Loader } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { fetchPosts } from '../actions';
+import { withRouter } from 'react-router-dom';
+import { fetchPosts } from '../actions/posts';
 import BaseList from './../components/BaseList';
 import PostList from './../components/PostList';
 
 class Category extends Component {
-  state = {
-    category: {},
-  }
 
   componentWillReceiveProps(props) {
-    const categoryPath = props.match.params.category;
+    const currentCategory = this.props.match.params.category;
+    const newCategory = props.match.params.category;
 
-    if (categoryPath !== this.state.category.path) {
-      this.props.fetchPosts(`/${categoryPath}/posts`);
-      this.setState({
-        category: props.categories.find((category) => category.path === categoryPath),
-      });
+    if (newCategory !== currentCategory) {
+      this.fetchPosts(newCategory);
     }
   }
 
-  render() {
+  componentWillMount() {
+    this.fetchPosts(this.props.match.params.category);
+  }
+
+  fetchPosts(category) {
+    this.props.fetchPosts(`/${category}/posts`);
+  }
+
+  render() {    
     return (
       <BaseList>
         <Segment>
-          <Dimmer active={this.props.postsLoading} inverted>
+          <Dimmer active={this.props.loading} inverted>
             <Loader></Loader>
           </Dimmer>
 
@@ -37,12 +41,8 @@ class Category extends Component {
   }
 }
 
-function mapStateToProps({ posts, postsLoading, categories }, ownProps) {
-  return {
-    posts: posts.filter((post) => post.category === ownProps.match.params.category),
-    postsLoading,
-    categories,
-  };
+function mapStateToProps({ posts }, ownProps) {  
+  return posts.postsList;
 }
 
 function mapDispatchToProps(dispatch) {
@@ -51,4 +51,4 @@ function mapDispatchToProps(dispatch) {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Category);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Category));

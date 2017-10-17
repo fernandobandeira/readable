@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Grid, Dimmer, Loader } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { fetchCategories } from '../actions';
+import { fetchCategories } from '../actions/categories';
 import CategoryList from './../components/CategoryList';
 
 class BaseList extends Component {
@@ -14,7 +14,7 @@ class BaseList extends Component {
     return (
       <Grid>
         <Grid.Column width={4}>
-          <Dimmer active={this.props.categoriesLoading} inverted>
+          <Dimmer active={this.props.loading} inverted>
             <Loader></Loader>
           </Dimmer>
 
@@ -32,8 +32,8 @@ class BaseList extends Component {
 
 function mapStateToProps({ categories, categoriesLoading }) {
   return {
-    categories,
-    categoriesLoading,
+    categories: categories.categoriesList.categories,
+    loading: categories.categoriesList.loading,
   };
 }
 
