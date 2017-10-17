@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Dimmer, Loader } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { fetchCategories } from '../actions/categories';
@@ -14,10 +14,6 @@ class BaseList extends Component {
     return (
       <Grid>
         <Grid.Column width={4}>
-          <Dimmer active={this.props.loading} inverted>
-            <Loader></Loader>
-          </Dimmer>
-
           <CategoryList categories={this.props.categories} active={this.props.match.params.category}>
           </CategoryList>
         </Grid.Column>
@@ -30,16 +26,21 @@ class BaseList extends Component {
   }
 }
 
-function mapStateToProps({ categories, categoriesLoading }) {
+function mapStateToProps({ categories }) {
+  const reducedCategories = categories.allIds.reduce((cur, id) => {
+    cur.push(categories.byId[id]);
+
+    return cur;
+  }, []);
+
   return {
-    categories: categories.categoriesList.categories,
-    loading: categories.categoriesList.loading,
+    categories: reducedCategories,    
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-      fetchCategories: (url) => dispatch(fetchCategories(url)),
+      fetchCategories: () => dispatch(fetchCategories()),
   };
 };
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Segment, Dimmer, Loader } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { fetchPosts } from '../actions/posts';
+import { fetchPostsByCategory } from '../actions/posts';
 import BaseList from './../components/BaseList';
 import PostList from './../components/PostList';
 
@@ -12,16 +12,12 @@ class Category extends Component {
     const newCategory = props.match.params.category;
 
     if (newCategory !== currentCategory) {
-      this.fetchPosts(newCategory);
+      this.props.fetchPostsByCategory(newCategory);
     }
   }
 
   componentWillMount() {
-    this.fetchPosts(this.props.match.params.category);
-  }
-
-  fetchPosts(category) {
-    this.props.fetchPosts(`/${category}/posts`);
+    this.props.fetchPostsByCategory(this.props.match.params.category);
   }
 
   render() {    
@@ -32,7 +28,7 @@ class Category extends Component {
             <Loader></Loader>
           </Dimmer>
 
-          <PostList posts={this.props.posts}>
+          <PostList posts={this.props.posts} sorting={this.props.sorting}>
           </PostList>
         </Segment>
       </BaseList>
@@ -40,13 +36,25 @@ class Category extends Component {
   }
 }
 
-function mapStateToProps({ posts }, ownProps) {  
-  return posts.postsList;
+function mapStateToProps({ posts }, ownProps) {
+  const filteredPosts = posts.allIds.reduce((cur, id) => {
+    const post = posts.byId[id];
+    if (post.category === ownProps.match.params.category) {
+      cur.push(post);
+    }
+
+    return cur;
+  }, []);
+
+  return {
+    posts: filteredPosts,
+    sorting: posts.sorting,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-      fetchPosts: (url) => dispatch(fetchPosts(url)),
+    fetchPostsByCategory: (category) => dispatch(fetchPostsByCategory(category)),
   };
 };
 

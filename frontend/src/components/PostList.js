@@ -1,40 +1,17 @@
-import _ from 'lodash'
 import React, { Component } from 'react';
-import { Feed, Icon, Select } from 'semantic-ui-react';
+import { Feed, Select } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import { connect } from 'react-redux';
 import PostToolbar from './PostToolbar';
+import { changeSorting } from '../actions/posts';
 
 class PostList extends Component {
-  state = {
-    column: undefined,
-    posts: [],
-    sortedPosts: [],
-    direction: undefined,
-  }
-
-  componentWillReceiveProps({ posts }) {
-    if (this.state.posts !== posts) {      
-      const { column = 'voteScore' } = this.state;
-      const sortedPosts = _.sortBy(posts, [column]).reverse();
-
-      this.setState({
-        column,
-        posts,
-        sortedPosts,
-      });
-    }
-  }
-
-  changeOrder(column) {
-    this.setState({
-      column: column,
-      sortedPosts: _.sortBy(this.state.posts, [column]).reverse(),
-    });
+  changeSorting(sorting) {
+    this.props.dispatch(changeSorting(sorting));
   }
 
   render() {    
-    const { column, sortedPosts } = this.state;
     const sortOptions = [
       {
         key: 'voteScore',
@@ -52,15 +29,15 @@ class PostList extends Component {
       <div>
         <div style={{ float: 'right' }}>
           Sort By:
-          <Select 
+          <Select
             style={{ marginLeft: '15px', marginBottom: '15px' }}
-            value={column}
+            value={this.props.sorting}
             options={sortOptions}
-            onChange={(e, { value }) => this.changeOrder(value)}
+            onChange={(e, { value }) => this.changeSorting(value)}
           />
         </div>
         <Feed>
-          {sortedPosts.map((post) => (
+          {this.props.posts.map((post) => (
             <Feed.Event key={post.id}>            
               <Feed.Content>
                 <Feed.Summary>
@@ -84,4 +61,4 @@ class PostList extends Component {
   }
 }
 
-export default PostList;
+export default connect()(PostList);

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Segment, Dimmer, Loader, Item, Icon } from 'semantic-ui-react';
+import { Segment, Item, Icon } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { fetchPost } from '../actions/posts';
@@ -12,10 +12,6 @@ class Post extends Component {
   render() {
     return (
       <Segment>
-        <Dimmer active={this.props.loading} inverted>
-          <Loader></Loader>
-        </Dimmer>
-
         <Item.Group>
           <Item>
             <Item.Content>
@@ -33,8 +29,10 @@ class Post extends Component {
   }
 }
 
-function mapStateToProps({ posts, postsLoading }, ownProps) {  
-  return posts.activePost;
+function mapStateToProps({ posts }, ownProps) {  
+  return {
+    post: posts.byId[ownProps.match.params.post] || {},
+  };
 }
 
 function mapDispatchToProps(dispatch) {

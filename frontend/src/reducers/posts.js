@@ -1,54 +1,52 @@
-import { 
+import _ from 'lodash';
+import {
   FETCH_POSTS,
-  FETCH_POSTS_SUCCESS,
+  FETCH_CATEGORY_POSTS,
   FETCH_POST,
-  FETCH_POST_SUCCESS,
+  CHANGE_SORTING,
 } from '../actions/posts';
 
 const INITIAL_STATE = {
-  postsList: {
-    posts: [],
-    loading: true,
-  },
-  activePost: {
-    post: {},
-    loading: true,
-  },
+  byId: {},
+  allIds: [],
+  sorting: 'voteScore',
+}
+
+function getSortedIds(posts, sorting) {
+  return _.sortBy(posts, [sorting])
+    .reverse()
+    .reduce((allIds, post) => {
+      allIds.push(post.id);
+
+      return allIds;
+    }, []);
 }
 
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
     case FETCH_POSTS:
-      return { 
+      return {
         ...state,
-        postsList: { 
-          ...state.postsList,
-          loading: true,
-        },
+        byId: action.payload,
+        allIds: getSortedIds(action.payload, state.sorting),
       };
-    case FETCH_POSTS_SUCCESS:
-      return { 
-        ...state, 
-        postsList: { 
-          posts: action.payload, 
-          loading: false,
-        },
-      };
+    case FETCH_CATEGORY_POSTS:
     case FETCH_POST:
-      return { 
-        ...state,
-        activePost: { 
-          ...state.activePost,
-          loading: true,
-        },
+      const byId = {
+        ...state.byId,
+        ...action.payload,
       };
-    case FETCH_POST_SUCCESS:
-      return { 
+
+      return {
         ...state,
-        activePost: { 
-          post: action.payload,
-          loading: false,
-        },
+        byId,
+        allIds: getSortedIds(byId, state.sorting),
+      };
+    case CHANGE_SORTING:
+      return {
+        ...state,
+        sorting: action.payload,
+        allIds: getSortedIds(state.byId, action.payload),
       };
     default:
       return state;

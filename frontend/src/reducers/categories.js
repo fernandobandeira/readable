@@ -1,32 +1,18 @@
 import { 
   FETCH_CATEGORIES,
-  FETCH_CATEGORIES_SUCCESS,
 } from '../actions/categories';
 
 const INITIAL_STATE = {
-  categoriesList: {
-    categories: [],
-    loading: true,
-  },
+  byId: {},
+  allIds: [],
 }
 
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
     case FETCH_CATEGORIES:
       return { 
-        ...state,
-        categoriesList: { 
-          ...state.categoriesList,
-          loading: true
-        }
-      };
-    case FETCH_CATEGORIES_SUCCESS:
-      return { 
-        ...state, 
-        categoriesList: { 
-          categories: action.payload, 
-          loading: false 
-        }
+        byId: action.payload,
+        allIds: Object.keys(action.payload),
       };
     default:
       return state;

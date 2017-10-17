@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Segment, Dimmer, Loader } from 'semantic-ui-react';
+import { Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { fetchPosts } from '../actions/posts';
 import BaseList from './../components/BaseList';
@@ -14,11 +14,7 @@ class Root extends Component {
     return (
       <BaseList>
         <Segment>
-          <Dimmer active={this.props.loading} inverted>
-            <Loader></Loader>
-          </Dimmer>
-
-          <PostList posts={this.props.posts}>
+          <PostList posts={this.props.posts} sorting={this.props.sorting}>
           </PostList>
         </Segment>
       </BaseList>
@@ -27,12 +23,21 @@ class Root extends Component {
 }
 
 function mapStateToProps({ posts }) {
-  return posts.postsList;
+  const reducedPosts = posts.allIds.reduce((cur, id) => {
+    cur.push(posts.byId[id]);
+
+    return cur;
+  }, []);
+
+  return {
+    posts: reducedPosts,
+    sorting: posts.sorting,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-      fetchPosts: (url) => dispatch(fetchPosts(url)),
+      fetchPosts: () => dispatch(fetchPosts()),
   };
 };
 
