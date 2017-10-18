@@ -1,38 +1,37 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { fetchPosts } from '../actions/posts';
-import BaseList from './../components/BaseList';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { fetchPosts } from '../actions/posts'
+import BaseList from './../components/BaseList'
 
 class Root extends Component {
-  componentWillMount() {
-    this.props.fetchPosts();    
+  componentWillMount () {
+    this.props.fetchPosts()
   }
 
-  render() {
+  render () {
     return (
-      <BaseList posts={this.props.posts} postsSorting={this.props.sorting}>
-      </BaseList>
-    );
+      <BaseList posts={this.props.posts} postsSorting={this.props.sorting} />
+    )
   }
 }
 
-function mapStateToProps({ posts }) {
+function mapStateToProps ({ posts }) {
   const reducedPosts = posts.allIds.reduce((cur, id) => {
-    cur.push(posts.byId[id]);
+    cur.push(posts.byId[id])
 
-    return cur;
-  }, []);
+    return cur
+  }, [])
 
   return {
     posts: reducedPosts,
-    sorting: posts.sorting,
-  };
+    sorting: posts.sorting
+  }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps (dispatch) {
   return {
-      fetchPosts: () => dispatch(fetchPosts()),
-  };
+    fetchPosts: () => dispatch(fetchPosts())
+  }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Root);
+export default connect(mapStateToProps, mapDispatchToProps)(Root)

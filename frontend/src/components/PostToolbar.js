@@ -1,19 +1,18 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Icon } from 'semantic-ui-react';
-import { fetchComments } from '../actions/comments';
-import PostVotes from './PostVotes';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Icon } from 'semantic-ui-react'
+import { fetchComments } from '../actions/comments'
+import PostVotes from './PostVotes'
 
 class PostToolbar extends Component {
-  componentWillMount() {
-    this.props.fetchComments(this.props.post.id);
+  componentWillMount () {
+    this.props.fetchComments(this.props.post.id)
   }
 
-  render() {
+  render () {
     return (
       <span>
-        <PostVotes post={this.props.post}>
-        </PostVotes>
+        <PostVotes post={this.props.post} />        
         <Icon
           name='comments'
         />
@@ -24,29 +23,29 @@ class PostToolbar extends Component {
         />
         {this.props.post.category}
       </span>
-    );
+    )
   }
 }
 
-function mapStateToProps({ comments }, ownProps) {
+function mapStateToProps ({ comments }, ownProps) {
   const filteredComments = comments.allIds.reduce((cur, id) => {
-    const comment = comments.byId[id];    
+    const comment = comments.byId[id]
     if (comment.parentId === ownProps.post.id) {
-      cur.push(comment);
+      cur.push(comment)
     }
 
-    return cur;
-  }, []);  
+    return cur
+  }, [])
 
   return {
-    comments: filteredComments,
-  };
+    comments: filteredComments
+  }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps (dispatch) {
   return {
-    fetchComments: (post) => dispatch(fetchComments(post)),
-  };
-};
+    fetchComments: (post) => dispatch(fetchComments(post))
+  }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostToolbar);
+export default connect(mapStateToProps, mapDispatchToProps)(PostToolbar)

@@ -1,21 +1,21 @@
-import axios from 'axios';
+import axios from 'axios'
 
-export const FETCH_CATEGORIES = 'FETCH_CATEGORIES';
+export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 
-export function fetchCategories() {
+export function fetchCategories () {
   return (dispatch) => {
-      axios.get('/categories')
-        .then((res) => {
-          const payload = res.data.categories.reduce((cur, category) => {
-            cur[category.path] = category;
+    axios.get('/categories')
+      .then((res) => {
+        const payload = res.data.categories.reduce((cur, category) => {
+          cur[category.path] = category
 
-            return cur;
-          }, {});
+          return cur
+        }, {})
 
-          dispatch({
-            type: FETCH_CATEGORIES,
-            payload,
-          });
-        });
-  };
+        dispatch({
+          type: FETCH_CATEGORIES,
+          payload
+        })
+      })
+  }
 }

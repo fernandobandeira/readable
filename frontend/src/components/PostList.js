@@ -1,34 +1,35 @@
-import React, { Component } from 'react';
-import { Feed, Select } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
-import { connect } from 'react-redux';
-import PostToolbar from './PostToolbar';
-import { changeSorting } from '../actions/posts';
+import React, { Component } from 'react'
+import { Feed, Select } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import moment from 'moment'
+import { connect } from 'react-redux'
+import PostToolbar from './PostToolbar'
+import { changeSorting } from '../actions/posts'
 
 class PostList extends Component {
-  changeSorting(sorting) {
-    this.props.dispatch(changeSorting(sorting));
+  changeSorting (sorting) {
+    this.props.dispatch(changeSorting(sorting))
   }
 
-  render() {    
+  render () {
     const sortOptions = [
       {
         key: 'voteScore',
         value: 'voteScore',
-        text: 'Vote Score',
+        text: 'Vote Score'
       },
       {
         key: 'timestamp',
         value: 'timestamp',
-        text: 'Recent Posts',
+        text: 'Recent Posts'
       },
       {
         key: 'title',
         value: 'title',
-        text: 'Post Title',
-      },
-    ];
+        text: 'Post Title'
+      }
+    ]
+    const { posts, sorting } = this.props
 
     return (
       <div>
@@ -36,14 +37,14 @@ class PostList extends Component {
           Sort By:
           <Select
             style={{ marginLeft: '15px', marginBottom: '15px' }}
-            value={this.props.sorting}
+            value={sorting}
             options={sortOptions}
             onChange={(e, { value }) => this.changeSorting(value)}
           />
         </div>
         <Feed>
-          {this.props.posts.map((post) => (
-            <Feed.Event key={post.id}>            
+          {posts.map((post) => (
+            <Feed.Event key={post.id}>
               <Feed.Content>
                 <Feed.Summary>
                   <Link to={`/${post.category}/${post.id}`}>{post.title}</Link> by {post.author}
@@ -55,15 +56,15 @@ class PostList extends Component {
                   {post.body}
                 </Feed.Extra>
                 <Feed.Meta>
-                  <PostToolbar post={post}></PostToolbar>
+                  <PostToolbar post={post} />
                 </Feed.Meta>
               </Feed.Content>
             </Feed.Event>
           ))}
         </Feed>
       </div>
-    );
+    )
   }
 }
 
-export default connect()(PostList);
+export default connect()(PostList)

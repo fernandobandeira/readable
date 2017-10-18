@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
-import { Segment, Item } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
-import { fetchPost } from '../actions/posts';
-import { fetchComments } from '../actions/comments';
-import PostVotes from '../components/PostVotes';
-import CommentList from '../components/CommentList';
+import React, { Component } from 'react'
+import { Segment, Item } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import moment from 'moment'
+import { fetchPost } from '../actions/posts'
+import { fetchComments } from '../actions/comments'
+import PostVotes from '../components/PostVotes'
+import CommentList from '../components/CommentList'
 
 class Post extends Component {
-  componentWillMount() {    
-    this.props.fetchComments(this.props.match.params.post);    
-    this.props.fetchPost(this.props.match.params.post);
+  componentWillMount () {
+    this.props.fetchComments(this.props.match.params.post)  
+    this.props.fetchPost(this.props.match.params.post)
   }
 
-  render() {
-    const { post, comments } = this.props;
+  render () {
+    const { post, comments } = this.props
 
     return (
       <div>
@@ -27,8 +27,7 @@ class Post extends Component {
                 <Item.Meta>Posted by {post.author} on <Link to={`/${post.category}`}>{post.category}</Link> {moment(post.timestamp).fromNow()}</Item.Meta>
                 <Item.Description>{post.body}</Item.Description>
                 <Item.Extra>
-                  <PostVotes post={post}>
-                  </PostVotes>
+                  <PostVotes post={post} />
                 </Item.Extra>
               </Item.Content>
             </Item>
@@ -36,36 +35,35 @@ class Post extends Component {
         </Segment>
 
         <Segment>
-          <CommentList comments={comments} sorting={this.props.commentsSorting}>
-          </CommentList>
+          <CommentList comments={comments} sorting={this.props.commentsSorting} />
         </Segment>
       </div>
-    );
+    )
   }
 }
 
-function mapStateToProps({ posts, comments }, ownProps) {
+function mapStateToProps ({ posts, comments }, ownProps) {
   const filteredComments = comments.allIds.reduce((cur, id) => {
-    const comment = comments.byId[id];
+    const comment = comments.byId[id]
     if (comment.parentId === ownProps.match.params.post) {
-      cur.push(comment);
+      cur.push(comment)
     }
 
-    return cur;
-  }, []);
+    return cur
+  }, [])
 
   return {
     post: posts.byId[ownProps.match.params.post] || {},
     comments: filteredComments,
-    commentsSorting: comments.sorting,
-  };
+    commentsSorting: comments.sorting
+  }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps (dispatch) {
   return {
     fetchPost: (id) => dispatch(fetchPost(id)),
-    fetchComments: (post) => dispatch(fetchComments(post)),    
-  };
+    fetchComments: (post) => dispatch(fetchComments(post))
+  }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Post);
+export default connect(mapStateToProps, mapDispatchToProps)(Post)
