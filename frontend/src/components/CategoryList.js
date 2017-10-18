@@ -9,7 +9,7 @@ class CategoryList extends Component {
     }
   }
 
-  render() {    
+  render() {      
     const { categories, active } = this.props;
 
     return (

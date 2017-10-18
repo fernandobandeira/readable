@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { fetchPosts } from '../actions/posts';
 import BaseList from './../components/BaseList';
-import PostList from './../components/PostList';
 
 class Root extends Component {
   componentWillMount() {
@@ -12,11 +10,7 @@ class Root extends Component {
 
   render() {
     return (
-      <BaseList>
-        <Segment>
-          <PostList posts={this.props.posts} sorting={this.props.sorting}>
-          </PostList>
-        </Segment>
+      <BaseList posts={this.props.posts} postsSorting={this.props.sorting}>
       </BaseList>
     );
   }

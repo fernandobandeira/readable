@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { Grid } from 'semantic-ui-react';
+import { Grid, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { fetchCategories } from '../actions/categories';
 import CategoryList from './../components/CategoryList';
+import PostList from './../components/PostList';
 
 class BaseList extends Component {
   componentWillMount() {
     this.props.fetchCategories();
   }
 
-  render() {
+  render() {    
     return (
       <Grid>
         <Grid.Column width={4}>
@@ -19,7 +20,10 @@ class BaseList extends Component {
         </Grid.Column>
 
         <Grid.Column stretched width={12}>
-          {this.props.children}
+          <Segment>
+            <PostList posts={this.props.posts} sorting={this.props.postsSorting}>
+            </PostList>
+          </Segment>
         </Grid.Column>
       </Grid>
     );
@@ -34,7 +38,7 @@ function mapStateToProps({ categories }) {
   }, []);
 
   return {
-    categories: reducedCategories,    
+    categories: reducedCategories,
   };
 }
 
