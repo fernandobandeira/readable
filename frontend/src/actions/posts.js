@@ -25,18 +25,6 @@ export function changeSorting(sorting) {
   };
 }
 
-function sendFetchRequest(url, action) {
-  return (dispatch) => {
-    axios.get(url)
-      .then((res) => {
-        dispatch({
-          type: action,
-          payload: reducePosts(res.data),
-        });
-      });
-  };
-}
-
 export function fetchPosts() {
   return (dispatch) => {
     axios.get('/posts')
