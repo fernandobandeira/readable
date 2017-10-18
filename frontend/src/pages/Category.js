@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Segment, Dimmer, Loader } from 'semantic-ui-react';
+import { Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { fetchPostsByCategory } from '../actions/posts';
 import BaseList from './../components/BaseList';
@@ -24,10 +24,6 @@ class Category extends Component {
     return (
       <BaseList>
         <Segment>
-          <Dimmer active={this.props.loading} inverted>
-            <Loader></Loader>
-          </Dimmer>
-
           <PostList posts={this.props.posts} sorting={this.props.sorting}>
           </PostList>
         </Segment>

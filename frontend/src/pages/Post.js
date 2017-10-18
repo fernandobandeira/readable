@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Segment, Item, Icon, Comment, Header } from 'semantic-ui-react';
+import { Segment, Item } from 'semantic-ui-react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { fetchPost } from '../actions/posts';
-import { fetchComments, sendCommentVote } from '../actions/comments';
+import { fetchComments } from '../actions/comments';
 import PostVotes from '../components/PostVotes';
-import Votes from '../components/Votes';
+import CommentList from '../components/CommentList';
 
 class Post extends Component {
   componentWillMount() {    
@@ -14,25 +15,20 @@ class Post extends Component {
   }
 
   render() {
+    const { post, comments } = this.props;
+
     return (
       <div>
         <Segment>
           <Item.Group>
             <Item>
               <Item.Content>
-                <Item.Header>{this.props.post.title}</Item.Header>
-                <Item.Meta>Posted by {this.props.post.author} {moment(this.props.post.timestamp).fromNow()}</Item.Meta>
-                <Item.Description>{this.props.post.body}</Item.Description>
+                <Item.Header>{post.title}</Item.Header>
+                <Item.Meta>Posted by {post.author} on <Link to={`/${post.category}`}>{post.category}</Link> {moment(post.timestamp).fromNow()}</Item.Meta>
+                <Item.Description>{post.body}</Item.Description>
                 <Item.Extra>
-                  <PostVotes post={this.props.post}>
+                  <PostVotes post={post}>
                   </PostVotes>
-                  <span>
-                    <Icon
-                      name='tag'
-                      style={{ marginLeft: '.25rem' }}
-                    />
-                    {this.props.post.category}
-                  </span>
                 </Item.Extra>
               </Item.Content>
             </Item>
@@ -40,28 +36,8 @@ class Post extends Component {
         </Segment>
 
         <Segment>
-          <Comment.Group>
-            <Header as='h3' dividing>{this.props.comments.length} Comments</Header>
-
-            {this.props.comments.map((comment) => (
-              <Comment key={comment.id}>
-                <Comment.Content>
-                  <Comment.Author as='a'>{comment.author}</Comment.Author>
-                  <Comment.Metadata>
-                    <div>{moment(comment.timestamp).calendar()}</div>
-                  </Comment.Metadata>
-                  <Comment.Text>{comment.body}</Comment.Text>
-                  <Comment.Actions>
-                    <Votes 
-                      voteScore={comment.voteScore}
-                      sendVote={(option) => this.props.sendCommentVote(comment.id, option)}
-                    >
-                    </Votes>
-                  </Comment.Actions>
-                </Comment.Content>
-              </Comment>
-            ))}
-          </Comment.Group>
+          <CommentList comments={comments} sorting={this.props.commentsSorting}>
+          </CommentList>
         </Segment>
       </div>
     );
@@ -70,25 +46,25 @@ class Post extends Component {
 
 function mapStateToProps({ posts, comments }, ownProps) {
   const filteredComments = comments.allIds.reduce((cur, id) => {
-    const comment = comments.byId[id];    
+    const comment = comments.byId[id];
     if (comment.parentId === ownProps.match.params.post) {
       cur.push(comment);
     }
 
     return cur;
-  }, []); 
+  }, []);
 
   return {
     post: posts.byId[ownProps.match.params.post] || {},
     comments: filteredComments,
+    commentsSorting: comments.sorting,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     fetchPost: (id) => dispatch(fetchPost(id)),
-    fetchComments: (post) => dispatch(fetchComments(post)),
-    sendCommentVote: (id, option) => dispatch(sendCommentVote(id, option)),
+    fetchComments: (post) => dispatch(fetchComments(post)),    
   };
 };
 

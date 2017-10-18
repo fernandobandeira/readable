@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { 
   FETCH_COMMENTS,
   SEND_COMMENT_VOTE,
+  CHANGE_COMMENTS_SORTING,
 } from '../actions/comments';
 
 const INITIAL_STATE = {
@@ -33,6 +34,12 @@ export default function(state = INITIAL_STATE, action) {
         ...state,
         byId,
         allIds: getSortedIds(byId, state.sorting),
+      };
+    case CHANGE_COMMENTS_SORTING:
+      return {
+        ...state,
+        sorting: action.payload,
+        allIds: getSortedIds(state.byId, action.payload),
       };
     default:
       return state;

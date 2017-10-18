@@ -2,6 +2,7 @@ import axios from 'axios';
 
 export const FETCH_COMMENTS = 'FETCH_COMMENTS';
 export const SEND_COMMENT_VOTE = 'SEND_COMMENT_VOTE';
+export const CHANGE_COMMENTS_SORTING = 'CHANGE_COMMENTS_SORTING';
 
 function reduceComments(comments) {
   const commentsArray = comments instanceof Array ? comments : [comments];
@@ -13,6 +14,13 @@ function reduceComments(comments) {
   
       return cur;
     }, {});
+}
+
+export function changeSorting(sorting) {
+  return {
+    type: CHANGE_COMMENTS_SORTING,
+    payload: sorting,
+  };
 }
 
 export function sendCommentVote(id, option) {  

@@ -23,6 +23,11 @@ class PostList extends Component {
         value: 'timestamp',
         text: 'Recent Posts',
       },
+      {
+        key: 'title',
+        value: 'title',
+        text: 'Post Title',
+      },
     ];
 
     return (

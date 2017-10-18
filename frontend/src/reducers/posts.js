@@ -14,13 +14,18 @@ const INITIAL_STATE = {
 }
 
 function getSortedIds(posts, sorting) {
-  return _.sortBy(posts, [sorting])
-    .reverse()
+  const sortedIds = _.sortBy(posts, [sorting])
     .reduce((allIds, post) => {
       allIds.push(post.id);
 
       return allIds;
     }, []);
+
+    if (sorting === 'title') {
+      return sortedIds;
+    }
+
+    return sortedIds.reverse();
 }
 
 export default function(state = INITIAL_STATE, action) {
