@@ -8,9 +8,7 @@ function reduceComments (comments) {
   const commentsArray = comments instanceof Array ? comments : [comments]
 
   return commentsArray.reduce((cur, comment) => {
-    if (!comment.deleted) {
-      cur[comment.id] = comment
-    }
+    cur[comment.id] = comment
 
     return cur
   }, {})

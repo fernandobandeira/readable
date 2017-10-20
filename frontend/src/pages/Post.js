@@ -1,17 +1,31 @@
 import React, { Component } from 'react'
-import { Segment, Item } from 'semantic-ui-react'
+import { Segment, Item, Icon, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
-import { fetchPost } from '../actions/posts'
+import PropTypes from 'prop-types'
+import { fetchPost, removePost } from '../actions/posts'
 import { fetchComments } from '../actions/comments'
 import PostVotes from '../components/PostVotes'
 import CommentList from '../components/CommentList'
 
 class Post extends Component {
-  componentWillMount () {
-    this.props.fetchComments(this.props.match.params.post)  
+  constructor () {
+    super()
+    this.handleRemove = this.handleRemove.bind(this)
+  }
+
+  componentDidMount () {
+    this.props.fetchComments(this.props.match.params.post)
     this.props.fetchPost(this.props.match.params.post)
+  }
+
+  handleRemove () {
+    this.props.removePost({
+      ...this.props.post,
+      deleted: true
+    })
+    this.props.history.push(`/${this.props.post.category}/`)
   }
 
   render () {
@@ -20,6 +34,16 @@ class Post extends Component {
     return (
       <div>
         <Segment>
+          <div style={{ float: 'right' }}>
+            <Link to={`/post/${post.id}`}>
+              <Button icon basic>
+                <Icon name='edit' />
+              </Button>
+            </Link>
+            <Button icon basic color='red' onClick={this.handleRemove}>
+              <Icon name='remove' />
+            </Button>
+          </div>
           <Item.Group>
             <Item>
               <Item.Content>
@@ -62,8 +86,20 @@ function mapStateToProps ({ posts, comments }, ownProps) {
 function mapDispatchToProps (dispatch) {
   return {
     fetchPost: (id) => dispatch(fetchPost(id)),
-    fetchComments: (post) => dispatch(fetchComments(post))
+    fetchComments: (post) => dispatch(fetchComments(post)),
+    removePost: (post) => dispatch(removePost(post))
   }
 };
+
+Post.propTypes = {
+  post: PropTypes.object.isRequired,
+  comments: PropTypes.array.isRequired,
+  fetchPost: PropTypes.func.isRequired,
+  fetchComments: PropTypes.func.isRequired,
+  removePost: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  commentsSorting: PropTypes.string.isRequired
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Post)

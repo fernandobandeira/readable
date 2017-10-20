@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Comment, Header, Select } from 'semantic-ui-react'
 import moment from 'moment'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { sendCommentVote, changeSorting } from '../actions/comments'
 import Votes from '../components/Votes'
 
@@ -69,6 +70,12 @@ class CommentList extends Component {
       </div>
     )
   }
+}
+
+CommentList.propTypes = {
+  comments: PropTypes.array.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  sorting: PropTypes.string.isRequired
 }
 
 export default connect()(CommentList)

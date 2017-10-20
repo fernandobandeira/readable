@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { fetchPostsByCategory } from '../actions/posts'
 import BaseList from './../components/BaseList'
 
@@ -13,7 +14,7 @@ class Category extends Component {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.props.fetchPostsByCategory(this.props.match.params.category)
   }
 
@@ -27,7 +28,7 @@ class Category extends Component {
 function mapStateToProps ({ posts }, ownProps) {
   const filteredPosts = posts.allIds.reduce((cur, id) => {
     const post = posts.byId[id]
-    if (post.category === ownProps.match.params.category) {
+    if (!post.deleted && post.category === ownProps.match.params.category) {
       cur.push(post)
     }
 
@@ -45,5 +46,12 @@ function mapDispatchToProps (dispatch) {
     fetchPostsByCategory: (category) => dispatch(fetchPostsByCategory(category))
   }
 };
+
+Category.propTypes = {
+  sorting: PropTypes.string.isRequired,
+  posts: PropTypes.array.isRequired,
+  fetchPostsByCategory: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Category)

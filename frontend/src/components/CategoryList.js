@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
 import { withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 class CategoryList extends Component {
   changeRoute ({ active }, path = null) {
@@ -31,6 +32,12 @@ class CategoryList extends Component {
       </Menu>
     )
   }
+}
+
+CategoryList.propTypes = {
+  categories: PropTypes.array.isRequired,
+  active: PropTypes.string,
+  history: PropTypes.object.isRequired
 }
 
 export default withRouter(CategoryList)

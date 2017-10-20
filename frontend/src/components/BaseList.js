@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 import { Grid, Segment } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import { fetchCategories } from '../actions/categories'
 import CategoryList from './../components/CategoryList'
 import PostList from './../components/PostList'
 
 class BaseList extends Component {
-  componentWillMount () {
+  componentDidMount () {
     this.props.fetchCategories()
   }
 
@@ -47,5 +48,13 @@ function mapDispatchToProps (dispatch) {
     fetchCategories: () => dispatch(fetchCategories())
   }
 };
+
+BaseList.propTypes = {
+  categories: PropTypes.array.isRequired,
+  posts: PropTypes.array.isRequired,
+  postsSorting: PropTypes.string.isRequired,
+  fetchCategories: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired
+}
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BaseList))

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { fetchPosts } from '../actions/posts'
 import BaseList from './../components/BaseList'
 
 class Root extends Component {
-  componentWillMount () {
+  componentDidMount () {
     this.props.fetchPosts()
   }
 
@@ -17,7 +18,9 @@ class Root extends Component {
 
 function mapStateToProps ({ posts }) {
   const reducedPosts = posts.allIds.reduce((cur, id) => {
-    cur.push(posts.byId[id])
+    if (!posts.byId[id].deleted) {
+      cur.push(posts.byId[id])
+    }
 
     return cur
   }, [])
@@ -33,5 +36,11 @@ function mapDispatchToProps (dispatch) {
     fetchPosts: () => dispatch(fetchPosts())
   }
 };
+
+Root.propTypes = {
+  posts: PropTypes.array.isRequired,
+  fetchPosts: PropTypes.func.isRequired,
+  sorting: PropTypes.string.isRequired
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Root)

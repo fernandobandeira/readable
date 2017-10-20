@@ -1,27 +1,30 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Icon } from 'semantic-ui-react'
+import PropTypes from 'prop-types'
 import { fetchComments } from '../actions/comments'
 import PostVotes from './PostVotes'
 
 class PostToolbar extends Component {
-  componentWillMount () {
+  componentDidMount () {
     this.props.fetchComments(this.props.post.id)
   }
 
   render () {
+    const { post, comments } = this.props
+
     return (
       <span>
-        <PostVotes post={this.props.post} />        
+        <PostVotes post={post} />
         <Icon
           name='comments'
         />
-        {this.props.comments.length} comments
+        {comments.length} comments
         <Icon
           name='tag'
           style={{ marginLeft: '.25rem' }}
         />
-        {this.props.post.category}
+        {post.category}
       </span>
     )
   }
@@ -46,6 +49,12 @@ function mapDispatchToProps (dispatch) {
   return {
     fetchComments: (post) => dispatch(fetchComments(post))
   }
+}
+
+PostToolbar.propTypes = {
+  post: PropTypes.object.isRequired,
+  fetchComments: PropTypes.func.isRequired,
+  comments: PropTypes.array.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostToolbar)
