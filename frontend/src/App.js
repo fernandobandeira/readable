@@ -5,6 +5,7 @@ import Root from './pages/Root'
 import Category from './pages/Category'
 import Post from './pages/Post'
 import PostForm from './pages/PostForm'
+import CommentForm from './pages/CommentForm'
 
 class App extends Component {
   render () {
@@ -15,7 +16,9 @@ class App extends Component {
           <Route path='/post/new' exact component={PostForm} />
           <Route path='/post/:post' exact component={PostForm} />
           <Route path='/:category' exact component={Category} />
-          <Route path='/:category/:post' component={Post} />
+          <Route path='/:category/:post' exact component={Post} />
+          <Route path='/:category/:post/comment' exact component={CommentForm} />
+          <Route path='/:category/:post/comment/:comment' exact component={CommentForm} />
         </Switch>
       </Container>
     )

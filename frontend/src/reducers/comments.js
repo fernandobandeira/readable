@@ -1,6 +1,10 @@
 import _ from 'lodash'
 import {
   FETCH_COMMENTS,
+  FETCH_COMMENT,
+  ADD_COMMENT,
+  EDIT_COMMENT,
+  REMOVE_COMMENT,
   SEND_COMMENT_VOTE,
   CHANGE_COMMENTS_SORTING
 } from '../actions/comments'
@@ -25,6 +29,10 @@ export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
     case FETCH_COMMENTS:
     case SEND_COMMENT_VOTE:
+    case FETCH_COMMENT:
+    case ADD_COMMENT:
+    case EDIT_COMMENT:
+    case REMOVE_COMMENT:
       const byId = {
         ...state.byId,
         ...action.payload

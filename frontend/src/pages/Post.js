@@ -59,7 +59,7 @@ class Post extends Component {
         </Segment>
 
         <Segment>
-          <CommentList comments={comments} sorting={this.props.commentsSorting} />
+          <CommentList comments={comments} post={post} sorting={this.props.commentsSorting} />
         </Segment>
       </div>
     )
@@ -69,7 +69,7 @@ class Post extends Component {
 function mapStateToProps ({ posts, comments }, ownProps) {
   const filteredComments = comments.allIds.reduce((cur, id) => {
     const comment = comments.byId[id]
-    if (comment.parentId === ownProps.match.params.post) {
+    if (!comment.deleted && comment.parentId === ownProps.match.params.post) {
       cur.push(comment)
     }
 

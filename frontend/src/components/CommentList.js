@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
-import { Comment, Header, Select } from 'semantic-ui-react'
+import { Comment, Header, Select, Button, Icon } from 'semantic-ui-react'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { sendCommentVote, changeSorting } from '../actions/comments'
+import { Link } from 'react-router-dom'
+import { sendCommentVote, changeSorting, removeComment } from '../actions/comments'
 import Votes from '../components/Votes'
 
 class CommentList extends Component {
   constructor () {
     super()
     this.sendCommentVote = this.sendCommentVote.bind(this)
+    this.handleRemove = this.handleRemove.bind(this)
   }
 
   sendCommentVote (id, option) {
@@ -18,6 +20,13 @@ class CommentList extends Component {
 
   changeSorting (sorting) {
     this.props.dispatch(changeSorting(sorting))
+  }
+
+  handleRemove (comment) {
+    this.props.dispatch(removeComment({
+      ...comment,
+      deleted: true
+    }))
   }
 
   render () {
@@ -33,10 +42,15 @@ class CommentList extends Component {
         text: 'Recent Comments'
       }
     ]
-    const { comments } = this.props
+    const { comments, post } = this.props
 
     return (
       <div>
+        <Link to={`/${post.category}/${post.id}/comment`}>
+          <Button basic color='blue'>
+            New Comment
+          </Button>
+        </Link>
         <div style={{ float: 'right' }}>
           Sort By:
           <Select
@@ -55,6 +69,14 @@ class CommentList extends Component {
                 <Comment.Author as='a'>{comment.author}</Comment.Author>
                 <Comment.Metadata>
                   <div>{moment(comment.timestamp).calendar()}</div>
+                  <Link to={`/post/${post.id}/comment/${comment.id}`}>
+                    <Button icon basic size='mini'>
+                      <Icon name='edit' />
+                    </Button>
+                  </Link>
+                  <Button icon basic color='red' size='mini' onClick={() => this.handleRemove(comment)}>
+                    <Icon name='remove' />
+                  </Button>
                 </Comment.Metadata>
                 <Comment.Text>{comment.body}</Comment.Text>
                 <Comment.Actions>
@@ -73,6 +95,7 @@ class CommentList extends Component {
 }
 
 CommentList.propTypes = {
+  post: PropTypes.object.isRequired,
   comments: PropTypes.array.isRequired,
   dispatch: PropTypes.func.isRequired,
   sorting: PropTypes.string.isRequired
