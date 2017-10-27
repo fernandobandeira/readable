@@ -8,6 +8,7 @@ import { fetchPost, removePost } from '../actions/posts'
 import { fetchComments } from '../actions/comments'
 import PostVotes from '../components/PostVotes'
 import CommentList from '../components/CommentList'
+import PageNotFound from './PageNotFound'
 
 class Post extends Component {
   componentDidMount () {
@@ -25,39 +26,43 @@ class Post extends Component {
 
   render () {
     const { post, comments } = this.props
-
-    return (
-      <div>
-        <Segment>
-          <div style={{ float: 'right' }}>
-            <Link to={`/post/${post.id}`}>
-              <Button icon basic>
-                <Icon name='edit' />
+    console.log(post);
+    if (post.deleted === false) {
+      return (
+        <div>
+          <Segment>
+            <div style={{ float: 'right' }}>
+              <Link to={`/post/${post.id}`}>
+                <Button icon basic>
+                  <Icon name='edit' />
+                </Button>
+              </Link>
+              <Button icon basic color='red' onClick={this.handleRemove}>
+                <Icon name='remove' />
               </Button>
-            </Link>
-            <Button icon basic color='red' onClick={this.handleRemove}>
-              <Icon name='remove' />
-            </Button>
-          </div>
-          <Item.Group>
-            <Item>
-              <Item.Content>
-                <Item.Header>{post.title}</Item.Header>
-                <Item.Meta>Posted by {post.author} on <Link to={`/${post.category}`}>{post.category}</Link> {moment(post.timestamp).fromNow()}</Item.Meta>
-                <Item.Description>{post.body}</Item.Description>
-                <Item.Extra>
-                  <PostVotes post={post} />
-                </Item.Extra>
-              </Item.Content>
-            </Item>
-          </Item.Group>
-        </Segment>
+            </div>
+            <Item.Group>
+              <Item>
+                <Item.Content>
+                  <Item.Header>{post.title}</Item.Header>
+                  <Item.Meta>Posted by {post.author} on <Link to={`/${post.category}`}>{post.category}</Link> {moment(post.timestamp).fromNow()}</Item.Meta>
+                  <Item.Description>{post.body}</Item.Description>
+                  <Item.Extra>
+                    <PostVotes post={post} />
+                  </Item.Extra>
+                </Item.Content>
+              </Item>
+            </Item.Group>
+          </Segment>
 
-        <Segment>
-          <CommentList comments={comments} post={post} sorting={this.props.commentsSorting} />
-        </Segment>
-      </div>
-    )
+          <Segment>
+            <CommentList comments={comments} post={post} sorting={this.props.commentsSorting} />
+          </Segment>
+        </div>
+      )
+    }
+
+    return <PageNotFound />
   }
 }
 

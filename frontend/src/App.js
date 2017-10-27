@@ -6,6 +6,7 @@ import Category from './pages/Category'
 import Post from './pages/Post'
 import PostForm from './pages/PostForm'
 import CommentForm from './pages/CommentForm'
+import PageNotFound from './pages/PageNotFound'
 
 class App extends Component {
   render () {
@@ -19,6 +20,7 @@ class App extends Component {
           <Route path='/:category/:post' exact component={Post} />
           <Route path='/:category/:post/comment' exact component={CommentForm} />
           <Route path='/:category/:post/comment/:comment' exact component={CommentForm} />
+          <Route path='*' component={PageNotFound} />
         </Switch>
       </Container>
     )
