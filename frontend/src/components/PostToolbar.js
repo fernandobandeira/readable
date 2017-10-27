@@ -30,26 +30,19 @@ class PostToolbar extends Component {
   }
 }
 
-function mapStateToProps ({ comments }, ownProps) {
-  const filteredComments = comments.allIds.reduce((cur, id) => {
-    const comment = comments.byId[id]
-    if (comment.parentId === ownProps.post.id) {
-      cur.push(comment)
+const mapStateToProps = ({ comments }, ownProps) => ({
+  comments: comments.allIds.reduce((cur, id) => {
+    if (comments.byId[id].parentId === ownProps.post.id) {
+      cur.push(comments.byId[id])
     }
 
     return cur
   }, [])
+})
 
-  return {
-    comments: filteredComments
-  }
-}
-
-function mapDispatchToProps (dispatch) {
-  return {
-    fetchComments: (post) => dispatch(fetchComments(post))
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  fetchComments: (post) => dispatch(fetchComments(post))
+})
 
 PostToolbar.propTypes = {
   post: PropTypes.object.isRequired,

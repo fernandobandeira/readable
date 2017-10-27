@@ -7,16 +7,10 @@ import { fetchPost } from '../actions/posts'
 import { addComment, editComment, fetchComment } from '../actions/comments'
 
 class CommentForm extends Component {
-  constructor () {
-    super()
-    this.state = {
-      id: '',
-      author: '',
-      body: ''
-    }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+  state = {
+    id: '',
+    author: '',
+    body: ''
   }
 
   componentDidMount () {
@@ -38,7 +32,7 @@ class CommentForm extends Component {
     }
   }
 
-  handleSubmit () {
+  handleSubmit = () => {
     const { post } = this.props
 
     if (this.state.id) {
@@ -58,7 +52,7 @@ class CommentForm extends Component {
     this.props.history.push(`/${post.category}/${post.id}`)
   }
 
-  handleChange (e, { name, value }) {
+  handleChange = (e, { name, value }) => {
     this.setState({ [name]: value })
   }
 
@@ -91,22 +85,18 @@ class CommentForm extends Component {
   }
 }
 
-function mapStateToProps ({ posts, comments }, ownProps) {
-  return {
-    post: posts.byId[ownProps.match.params.post] || {},
-    comment: comments.byId[ownProps.match.params.comment] || {}
-  }
-}
+const mapStateToProps = ({ posts, comments }, ownProps) => ({
+  post: posts.byId[ownProps.match.params.post] || {},
+  comment: comments.byId[ownProps.match.params.comment] || {}
+})
 
-function mapDispatchToProps (dispatch) {
-  return {
-    fetchCategories: () => dispatch(fetchCategories()),
-    fetchPost: (id) => dispatch(fetchPost(id)),
-    fetchComment: (id) => dispatch(fetchComment(id)),
-    addComment: (comment) => dispatch(addComment(comment)),
-    editComment: (comment) => dispatch(editComment(comment))
-  }
-};
+const mapDispatchToProps = dispatch => ({
+  fetchCategories: () => dispatch(fetchCategories()),
+  fetchPost: id => dispatch(fetchPost(id)),
+  fetchComment: id => dispatch(fetchComment(id)),
+  addComment: comment => dispatch(addComment(comment)),
+  editComment: comment => dispatch(editComment(comment))
+})
 
 CommentForm.propTypes = {
   post: PropTypes.object.isRequired,

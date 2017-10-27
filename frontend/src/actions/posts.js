@@ -10,7 +10,7 @@ export const ADD_POST = 'ADD_POST'
 export const EDIT_POST = 'EDIT_POST'
 export const REMOVE_POST = 'REMOVE_POST'
 
-function reducePosts (posts) {
+const reducePosts = (posts) => {
   const postsArray = posts instanceof Array ? posts : [posts]
 
   return postsArray.reduce((cur, post) => {
@@ -20,119 +20,103 @@ function reducePosts (posts) {
   }, {})
 }
 
-export function changeSorting (sorting) {
-  return {
-    type: CHANGE_SORTING,
-    payload: sorting
-  }
-}
+export const changeSorting = sorting => ({
+  type: CHANGE_SORTING,
+  payload: sorting
+})
 
-export function fetchPosts () {
-  return (dispatch) => {
-    axios.get('/posts')
-      .then((res) => {
-        dispatch({
-          type: FETCH_POSTS,
-          payload: reducePosts(res.data)
-        })
+export const fetchPosts = () => dispatch => {
+  axios.get('/posts')
+    .then((res) => {
+      dispatch({
+        type: FETCH_POSTS,
+        payload: reducePosts(res.data)
       })
-  }
-}
-
-export function fetchPostsByCategory (category) {
-  return (dispatch) => {
-    axios.get(`/${category}/posts`)
-      .then((res) => {
-        dispatch({
-          type: FETCH_CATEGORY_POSTS,
-          payload: reducePosts(res.data)
-        })
-      })
-  }
-}
-
-export function fetchPost (id) {
-  return (dispatch) => {
-    axios.get(`/posts/${id}`)
-      .then((res) => {
-        dispatch({
-          type: FETCH_POST,
-          payload: reducePosts(res.data)
-        })
-      })
-  }
-}
-
-export function sendVote (id, option) {
-  return (dispatch) => {
-    axios.post(`/posts/${id}`, { option })
-      .then((res) => {
-        dispatch({
-          type: SEND_VOTE,
-          payload: reducePosts(res.data)
-        })
-      })
-  }
-}
-
-export function addPost (post) {
-  return (dispatch) => {
-    const data = {
-      ...post,
-      id: uuid().split('-').join(''),
-      timestamp: Date.now()
-    }
-
-    dispatch({
-      type: ADD_POST,
-      payload: reducePosts(data)
     })
-
-    axios.post(`/posts`, data)
-      .then((res) => {
-        dispatch({
-          type: FETCH_POST,
-          payload: reducePosts(res.data)
-        })
-      })
-  }
 }
 
-export function editPost (post) {
-  return (dispatch) => {
-    dispatch({
-      type: EDIT_POST,
-      payload: reducePosts(post)
-    })
-
-    axios.put(`/posts/${post.id}`, {
-      title: post.title,
-      author: post.author,
-      category: post.category,
-      body: post.body
-    })
-      .then((res) => {
-        dispatch({
-          type: FETCH_POST,
-          payload: reducePosts(res.data)
-        })
+export const fetchPostsByCategory = category => dispatch => {
+  axios.get(`/${category}/posts`)
+    .then((res) => {
+      dispatch({
+        type: FETCH_CATEGORY_POSTS,
+        payload: reducePosts(res.data)
       })
-  }
+    })
 }
 
-export function removePost (post) {
-  return (dispatch) => {
-    dispatch({
-      type: REMOVE_POST,
-      payload: reducePosts(post)
-    })
-
-    axios.delete(`/posts/${post.id}`)
-      .then((res) => {
-        dispatch({
-          type: FETCH_POST,
-          payload: reducePosts(res.data)
-        })
+export const fetchPost = id => dispatch => {
+  axios.get(`/posts/${id}`)
+    .then((res) => {
+      dispatch({
+        type: FETCH_POST,
+        payload: reducePosts(res.data)
       })
+    })
+}
+
+export const sendVote = (id, option) => dispatch => {
+  axios.post(`/posts/${id}`, { option })
+    .then((res) => {
+      dispatch({
+        type: SEND_VOTE,
+        payload: reducePosts(res.data)
+      })
+    })
+}
+
+export const addPost = post => dispatch => {
+  const data = {
+    ...post,
+    id: uuid().split('-').join(''),
+    timestamp: Date.now()
   }
+
+  dispatch({
+    type: ADD_POST,
+    payload: reducePosts(data)
+  })
+
+  axios.post(`/posts`, data)
+    .then((res) => {
+      dispatch({
+        type: FETCH_POST,
+        payload: reducePosts(res.data)
+      })
+    })
+}
+
+export const editPost = post => dispatch => {
+  dispatch({
+    type: EDIT_POST,
+    payload: reducePosts(post)
+  })
+
+  axios.put(`/posts/${post.id}`, {
+    title: post.title,
+    author: post.author,
+    category: post.category,
+    body: post.body
+  })
+    .then((res) => {
+      dispatch({
+        type: FETCH_POST,
+        payload: reducePosts(res.data)
+      })
+    })
+}
+
+export const removePost = post => dispatch => {
+  dispatch({
+    type: REMOVE_POST,
+    payload: reducePosts(post)
+  })
+
+  axios.delete(`/posts/${post.id}`)
+    .then((res) => {
+      dispatch({
+        type: FETCH_POST,
+        payload: reducePosts(res.data)
+      })
+    })
 }

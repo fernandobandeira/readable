@@ -1,41 +1,18 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { onComponentDidMount } from 'react-redux-lifecycle'
 import { fetchPosts } from '../actions/posts'
 import BaseList from './../components/BaseList'
 
-class Root extends Component {
-  componentDidMount () {
-    this.props.fetchPosts()
-  }
+const Root = ({ posts, sorting }) => (
+  <BaseList posts={posts} postsSorting={sorting} />
+)
 
-  render () {
-    return (
-      <BaseList posts={this.props.posts} postsSorting={this.props.sorting} />
-    )
-  }
-}
-
-function mapStateToProps ({ posts }) {
-  const reducedPosts = posts.allIds.reduce((cur, id) => {
-    if (!posts.byId[id].deleted) {
-      cur.push(posts.byId[id])
-    }
-
-    return cur
-  }, [])
-
-  return {
-    posts: reducedPosts,
-    sorting: posts.sorting
-  }
-}
-
-function mapDispatchToProps (dispatch) {
-  return {
-    fetchPosts: () => dispatch(fetchPosts())
-  }
-};
+const mapStateToProps = ({ posts }) => ({
+  posts: posts.allIds.map(id => posts.byId[id]),
+  sorting: posts.sorting
+})
 
 Root.propTypes = {
   posts: PropTypes.array.isRequired,
@@ -43,4 +20,6 @@ Root.propTypes = {
   sorting: PropTypes.string.isRequired
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Root)
+export default connect(mapStateToProps)(
+  onComponentDidMount(fetchPosts)(Root)
+)

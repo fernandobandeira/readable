@@ -10,17 +10,12 @@ import PostVotes from '../components/PostVotes'
 import CommentList from '../components/CommentList'
 
 class Post extends Component {
-  constructor () {
-    super()
-    this.handleRemove = this.handleRemove.bind(this)
-  }
-
   componentDidMount () {
     this.props.fetchComments(this.props.match.params.post)
     this.props.fetchPost(this.props.match.params.post)
   }
 
-  handleRemove () {
+  handleRemove = () => {
     this.props.removePost({
       ...this.props.post,
       deleted: true
@@ -66,30 +61,23 @@ class Post extends Component {
   }
 }
 
-function mapStateToProps ({ posts, comments }, ownProps) {
-  const filteredComments = comments.allIds.reduce((cur, id) => {
-    const comment = comments.byId[id]
-    if (!comment.deleted && comment.parentId === ownProps.match.params.post) {
-      cur.push(comment)
+const mapStateToProps = ({ posts, comments }, ownProps) => ({
+  post: posts.byId[ownProps.match.params.post] || {},
+  comments: comments.allIds.reduce((cur, id) => {
+    if (comments.byId[id].parentId === ownProps.match.params.post) {
+      cur.push(comments.byId[id])
     }
 
     return cur
-  }, [])
+  }, []),
+  commentsSorting: comments.sorting
+})
 
-  return {
-    post: posts.byId[ownProps.match.params.post] || {},
-    comments: filteredComments,
-    commentsSorting: comments.sorting
-  }
-}
-
-function mapDispatchToProps (dispatch) {
-  return {
-    fetchPost: (id) => dispatch(fetchPost(id)),
-    fetchComments: (post) => dispatch(fetchComments(post)),
-    removePost: (post) => dispatch(removePost(post))
-  }
-};
+const mapDispatchToProps = dispatch => ({
+  fetchPost: (id) => dispatch(fetchPost(id)),
+  fetchComments: (post) => dispatch(fetchComments(post)),
+  removePost: (post) => dispatch(removePost(post))
+})
 
 Post.propTypes = {
   post: PropTypes.object.isRequired,

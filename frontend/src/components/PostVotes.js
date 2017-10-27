@@ -1,25 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { sendVote } from '../actions/posts'
 import Votes from './Votes'
 
-class PostVotes extends Component {
-  constructor () {
-    super()
-    this.sendVote = this.sendVote.bind(this)
-  }
-
-  sendVote (option) {
-    this.props.dispatch(sendVote(this.props.post.id, option))
-  }
-
-  render () {
-    return (
-      <Votes voteScore={this.props.post.voteScore} sendVote={this.sendVote} />
-    )
-  }
-}
+const PostVotes = ({ post, dispatch }) => (
+  <Votes voteScore={post.voteScore} sendVote={option => dispatch(sendVote(post.id, option))} />
+)
 
 PostVotes.propTypes = {
   post: PropTypes.object.isRequired,

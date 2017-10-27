@@ -15,15 +15,17 @@ const INITIAL_STATE = {
   sorting: 'voteScore'
 }
 
-function getSortedIds (comments, sorting) {
-  return _.sortBy(comments, sorting)
-    .reverse()
-    .reduce((allIds, comment) => {
+const getSortedIds = (comments, sorting) => (
+  _.sortBy(comments, sorting)
+  .reverse()
+  .reduce((allIds, comment) => {
+    if (!comment.deleted) {
       allIds.push(comment.id)
+    }
 
-      return allIds
-    }, [])
-}
+    return allIds
+  }, [])
+)
 
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {

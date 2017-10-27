@@ -6,18 +6,12 @@ import { fetchCategories } from '../actions/categories'
 import { addPost, editPost, fetchPost } from '../actions/posts'
 
 class PostForm extends Component {
-  constructor () {
-    super()
-    this.state = {
-      id: '',
-      title: '',
-      author: '',
-      category: '',
-      body: ''
-    }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+  state = {
+    id: '',
+    title: '',
+    author: '',
+    category: '',
+    body: ''
   }
 
   componentDidMount () {
@@ -41,7 +35,7 @@ class PostForm extends Component {
     }
   }
 
-  handleSubmit () {
+  handleSubmit = () => {
     if (this.state.id) {
       this.props.editPost({
         ...this.props.post,
@@ -58,7 +52,7 @@ class PostForm extends Component {
     this.props.history.push(`/${this.state.category}/`)
   }
 
-  handleChange (e, { name, value }) {
+  handleChange = (e, { name, value }) => {
     this.setState({ [name]: value })
   }
 
@@ -110,31 +104,21 @@ class PostForm extends Component {
   }
 }
 
-function mapStateToProps ({ posts, categories }, ownProps) {
-  const reducedCategories = categories.allIds.reduce((cur, id) => {
-    cur.push({
-      key: categories.byId[id].path,
-      text: categories.byId[id].name,
-      value: categories.byId[id].path
-    })
+const mapStateToProps = ({ posts, categories }, ownProps) => ({
+  categories: categories.allIds.map((id) => ({
+    key: categories.byId[id].path,
+    text: categories.byId[id].name,
+    value: categories.byId[id].path
+  })),
+  post: posts.byId[ownProps.match.params.post] || {}
+})
 
-    return cur
-  }, [])
-
-  return {
-    categories: reducedCategories,
-    post: posts.byId[ownProps.match.params.post] || {}
-  }
-}
-
-function mapDispatchToProps (dispatch) {
-  return {
-    fetchCategories: () => dispatch(fetchCategories()),
-    fetchPost: (id) => dispatch(fetchPost(id)),
-    addPost: (post) => dispatch(addPost(post)),
-    editPost: (post) => dispatch(editPost(post))
-  }
-};
+const mapDispatchToProps = dispatch => ({
+  fetchCategories: () => dispatch(fetchCategories()),
+  fetchPost: (id) => dispatch(fetchPost(id)),
+  addPost: (post) => dispatch(addPost(post)),
+  editPost: (post) => dispatch(editPost(post))
+});
 
 PostForm.propTypes = {
   categories: PropTypes.array.isRequired,

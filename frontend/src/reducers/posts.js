@@ -18,11 +18,13 @@ const INITIAL_STATE = {
 
 function getSortedIds (posts, sorting) {
   const sortedIds = _.sortBy(posts, [sorting])
-    .reduce((allIds, post) => {
+  .reduce((allIds, post) => {
+    if (!post.deleted) {
       allIds.push(post.id)
+    }
 
-      return allIds
-    }, [])
+    return allIds
+  }, [])
 
   if (sorting === 'title') {
     return sortedIds

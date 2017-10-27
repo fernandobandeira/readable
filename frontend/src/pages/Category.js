@@ -25,27 +25,20 @@ class Category extends Component {
   }
 }
 
-function mapStateToProps ({ posts }, ownProps) {
-  const filteredPosts = posts.allIds.reduce((cur, id) => {
-    const post = posts.byId[id]
-    if (!post.deleted && post.category === ownProps.match.params.category) {
-      cur.push(post)
+const mapStateToProps = ({ posts }, ownProps) => ({
+  posts: posts.allIds.reduce((cur, id) => {
+    if (posts.byId[id].category === ownProps.match.params.category) {
+      cur.push(posts.byId[id])
     }
 
     return cur
-  }, [])
+  }, []),
+  sorting: posts.sorting
+})
 
-  return {
-    posts: filteredPosts,
-    sorting: posts.sorting
-  }
-}
-
-function mapDispatchToProps (dispatch) {
-  return {
-    fetchPostsByCategory: (category) => dispatch(fetchPostsByCategory(category))
-  }
-};
+const mapDispatchToProps = dispatch => ({
+  fetchPostsByCategory: category => dispatch(fetchPostsByCategory(category))
+})
 
 Category.propTypes = {
   sorting: PropTypes.string.isRequired,
